@@ -1,1 +1,22 @@
-
+version: '2'
+services:
+  imgproxy:
+    container_name: 'imgproxy'
+    image: 'darthsim/imgproxy'
+    restart: always
+    environment:
+      - IMGPROXY_KEY={key}
+      - IMGPROXY_SALT={salt}
+      - IMGPROXY_ENFORCE_WEBP=true
+      - IMGPROXY_ENABLE_CLIENT_HINTS=true
+      - IMGPROXY_MAX_ANIMATION_FRAMES=30
+      - IMGPROXY_TTL=31557600
+      - IMGPROXY_USE_ETAG=true
+      - IMGPROXY_JPEG_PROGRESSIVE=true
+      - IMGPROXY_PNG_INTERLACED=true
+      - IMGPROXY_PNG_QUANTIZE=true
+      - IMGPROXY_CONCURRENCY=16
+      - IMGPROXY_QUALITY=85
+      - IMGPROXY_GZIP_COMPRESSION=7
+    ports:
+      - '1415:8080'
