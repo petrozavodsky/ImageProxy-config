@@ -1,7 +1,7 @@
-version: '2'
+version: '3'
 services:
   imgproxy:
-    container_name: 'imgproxy'
+    container_name: 'imgproxy_backend'
     image: 'darthsim/imgproxy'
     restart: always
     environment:
@@ -20,3 +20,11 @@ services:
       - IMGPROXY_GZIP_COMPRESSION=7
     ports:
       - '1314:8080'
+  nginx:
+    image: nginx:latest
+    container_name: 'imgproxy_nginx'
+    volumes:
+      - ./conf:/etc/nginx/conf.d/
+    ports:
+      - 80:80
+      - 443:443
