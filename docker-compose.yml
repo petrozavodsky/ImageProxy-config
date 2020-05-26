@@ -5,8 +5,8 @@ services:
     image: 'darthsim/imgproxy'
     restart: always
     environment:
-      - IMGPROXY_KEY={key}
-      - IMGPROXY_SALT={salt}
+      - IMGPROXY_KEY=943b421c9eb07c830af81030552c86009268de4e532ba2ee2eab8247c6da0881
+      - IMGPROXY_SALT=943b421c9eb07c830af81030552c86009268de4e532ba2ee2eab8247c6da0881
       - IMGPROXY_ENFORCE_WEBP=true
       - IMGPROXY_ENABLE_CLIENT_HINTS=true
       - IMGPROXY_MAX_ANIMATION_FRAMES=30
@@ -19,4 +19,4 @@ services:
       - IMGPROXY_QUALITY=85
       - IMGPROXY_GZIP_COMPRESSION=7
     ports:
-      - '1415:8080'
+      - '1314:8080'
