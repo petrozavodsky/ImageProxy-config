@@ -20,17 +20,3 @@ services:
       - IMGPROXY_GZIP_COMPRESSION=7
     ports:
       - '1314:8080'
-    networks:
-      - imgproxy-network
-  nginx:
-    image: nginx:latest
-    container_name: 'imgproxy_nginx'
-    volumes:
-      - ./conf:/etc/nginx/conf.d/
-      - ./cache:/var/cache/nginx/
-    ports:
-      - 80:80
-    networks:
-      - imgproxy-network
-networks:
-  imgproxy-network:
