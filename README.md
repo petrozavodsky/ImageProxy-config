@@ -1,44 +1,28 @@
 
 ## Установка на отдельный сервер
 
-Файл docker-compose содержащий
- [Nginx](https://github.com/petrozavodsky/ImageProxy-config/tree/with-nginx)
- находится в соседней ветке. Он больше подходит для установки на отдельном сервере.
-
-Сделать это проще, используя образ содержащий nginx порядок действий такой:
- 
-1. Запускаем в терминале генератор ключей `php generate.php`.
-2. Выполняем `docker-compose up -d` в каталоге содержащем файл docker-compose.yml.
+1. Клонируем ветку этого репозитория содержащую реверс прокси `git clone git@github.com:petrozavodsky/ImageProxy-config.git -b with-nginx` 
+2. Запускаем в терминале генератор ключей `php generate.php`.
+3. Меняем в конфиге `/conf/imageproxy.conf` домен `site.ru` собственный или несколько собственных доменов. 
+3. В каталоге содержащем файл `docker-compose.yml` выполняем `docker-compose up -d`.
 
 ## Установка на сервер с уже существующим сайтом
 
-1. Так как выдумать длинное шестнадцатеричное число сложно запускаем в терминале генератор ключей 
-`php generate.php` он заменит в файле docker-compose.yml `{KEY}` и `{SALT}` случайными HEX строками.
-2. Выполняем `docker-compose up -d` что бы запустить контейнер.
-
-Строки из docker-compose.yml `IMGPROXY_KEY` и `IMGPROXY_SALT` нужно запомнить, для использования в
- клиентском приложении.
-
-В этом же файле docker-compose.yml остальные параметры из секции `environment` можно поменять по желанию.
-
-## Реверс прокси и кэширование 
-
-Так как образ imgproxy не содержит инструментов кэширования, рекомендуется использовать реверс прокси для кэширования
- результатов его работы.
-
-Для этого нужно создать каталог для кэширования изображений, командой в терминале:
-
-`mkdir /var/cache/nginx/image_proxy`
-
-После в каталоге `/etc/nginx/conf.d` создать файл с произвольным именем и
- расширением `*.conf` такого содержания
+1. Клонируем эту ветку`git clone git@github.com:petrozavodsky/ImageProxy-config.git -b nginx-reverse-proxy` 
+2. Запускаем в терминале генератор ключей `php generate.php`.
+3. Выполняем `docker-compose up -d` что бы запустить контейнер.
+3. Создаем каталог для кеширования изображений `
+mkdir /var/cache/nginx/image_proxy  && chmod 775 /var/cache/nginx/image_proxy && chown www-data:www-data /var/cache/nginx/image_proxy` 
+и выставляем ей необходимые атрибуты.
+4. В каталоге `/etc/nginx/conf.d` создать файл с произвольным именем и расширением `*.conf` такого содержания:
 
 ```
 proxy_cache_path /var/cache/nginx/image_proxy levels=1:2 keys_zone=image_proxy:900m inactive=360m max_size=3G;
 proxy_cache_min_uses 1;
 ```
 
-Настройки виртуального хоста nginx должны быть примерно такими:
+5. В каталоге `/etc/nginx/sites-available` создаем конфиг виртуальный хост nginx с произвольным именем и 
+расширением `*.conf` его конфиг должен выглядеть примерно так:
 
 ```
 server {
@@ -69,4 +53,14 @@ server {
 }
 ```
 
-вместо site.ru желаемый домен. 
+домен site.ru нужно поменять на собственный. 
+
+6. Создаем символическую ссылку `ln -s /etc/nginx/sites-available/imgproxy.conf /etc/nginx/sites-enabled/imgproxy.conf`.
+
+7. Проверяем корректность конфигов `nginx -t` и перезапускаем nginx в случае отсутвия сообщений об ошибках `serice nginx restart`.
+
+Строки из docker-compose.yml `IMGPROXY_KEY` и `IMGPROXY_SALT` нужно запомнить, для использования в
+ клиентском приложении.
+
+Так как выдумать длинное шестнадцатеричное число не имея привычки сложно я написал скрипт `generate.php` который сгенерирует
+ случайные HEX троки.
