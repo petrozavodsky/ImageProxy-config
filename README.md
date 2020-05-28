@@ -1,4 +1,3 @@
-
 ## Установка на отдельный сервер
 
 1. Клонируем ветку этого репозитория содержащую реверс прокси `git clone git@github.com:petrozavodsky/ImageProxy-config.git -b with-nginx` 
@@ -11,7 +10,7 @@
 1. Клонируем эту ветку`git clone git@github.com:petrozavodsky/ImageProxy-config.git -b nginx-reverse-proxy` 
 2. Запускаем в терминале генератор ключей `php generate.php`.
 3. Выполняем `docker-compose up -d` что бы запустить контейнер.
-3. Создаем каталог для кеширования изображений `
+3. Создаем каталог для кэширования изображений `
 mkdir /var/cache/nginx/image_proxy  && chmod 775 /var/cache/nginx/image_proxy && chown www-data:www-data /var/cache/nginx/image_proxy` 
 и выставляем ей необходимые атрибуты.
 4. В каталоге `/etc/nginx/conf.d` создать файл с произвольным именем и расширением `*.conf` такого содержания:
@@ -52,15 +51,14 @@ server {
     }
 }
 ```
-
 домен site.ru нужно поменять на собственный. 
 
 6. Создаем символическую ссылку `ln -s /etc/nginx/sites-available/imgproxy.conf /etc/nginx/sites-enabled/imgproxy.conf`.
 
-7. Проверяем корректность конфигов `nginx -t` и перезапускаем nginx в случае отсутвия сообщений об ошибках `serice nginx restart`.
+7. Проверяем корректность конфигов `nginx -t` и перезапускаем nginx в случае отсутствия сообщений об ошибках `serice nginx restart`.
 
 Строки из docker-compose.yml `IMGPROXY_KEY` и `IMGPROXY_SALT` нужно запомнить, для использования в
  клиентском приложении.
 
 Так как выдумать длинное шестнадцатеричное число не имея привычки сложно я написал скрипт `generate.php` который сгенерирует
- случайные HEX троки.
+ случайные HEX строки.
