@@ -1,6 +1,7 @@
 ## Установка на отдельный сервер
 
 1. Клонируем ветку этого репозитория содержащую реверс прокси 
+
 `git clone git@github.com:petrozavodsky/ImageProxy-config.git -b with-nginx`.
 2. Запускаем в терминале генератор ключей `php generate.php`.
 3. Меняем в конфиге `/conf/imageproxy.conf` домен `site.ru` собственный или несколько собственных доменов. 
